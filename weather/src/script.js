@@ -155,6 +155,150 @@ class CloudParticle {
 
 
 
+class SunParticle {
+    constructor(effect){
+        this.effect = effect;
+        this.x = Math.floor(Math.random() * (this.effect.width-500) + 1);
+        this.y = Math.floor(Math.random() * 500 + 1);
+        this.speedX;
+        this.speedY;
+        this.speedModifier = Math.floor(Math.random() * 6 + 1);
+        this.history = [{x: this.x, y: this.y}];
+        this.maxLegnth = Math.floor(Math.random() * 10 + 5);
+        this.angle = 0;
+        this.newAngle = 0;
+        this.angleCorrector = Math.random() * 0.3 + 0.01;
+        this.timer = this.maxLegnth * 15;
+        this.colors = ['#fcde1c', '#f5d611', '#f5d611']
+        this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
+    }
+    draw(context){
+        context.beginPath();
+        context.moveTo(this.history[0].x, this.history[0].y);
+        for (let i = 0; i < this.history.length; i++){
+            context.lineTo(this.history[i].x, this.history[i].y);
+        }
+        context.strokeStyle = this.color;
+        context.stroke();
+    }
+
+    update(){
+        this.timer--;
+        if (this.timer >= 1){
+            let x = Math.floor(this.x / this.effect.cellSize);
+            let y = Math.floor(this.y / this.effect.cellSize);
+            let index = y * this.effect.cols + x;
+            
+            if (this.effect.flowField[index]){
+                this.newAngle = this.effect.flowField[index].colorAngle;
+                if (this.angle > this.newAngle){
+                    this.angle -= this.angleCorrector;
+                } else if ( this.angle < this.newAngle){
+                    this.angle += this.angleCorrector;
+                } else {
+                    this.angle = this.newAngle;
+                }
+            }
+            this.x -= Math.cos(this.angle) * Math.floor(Math.random() * 1.5 + 0.5);
+            this.y += Math.cos(this.angle) * Math.floor(Math.random() * 1.5 + 0.01);
+
+            this.history.push({x: this.x, y: this.y});
+            if(this.history.length > this.maxLegnth){
+                this.history.shift();
+            }
+        } else if (this.history.length > 1) {
+            this.history.shift();
+        } else {
+            this.reset();
+        }
+        
+    }
+
+    reset(){
+        this.x = Math.random() * this.effect.width + (this.effect.width-50);
+        this.y = Math.floor(Math.random() * 15 + 1);
+        this.history = [{x: this.x, y: this.y}];
+        this.timer = this.maxLegnth * 10;
+               
+    }
+}
+
+
+
+
+
+class GrassParticle {
+    constructor(effect){
+        this.effect = effect;
+        this.x = Math.floor(Math.random() * this.effect.width);
+        this.y = Math.floor(Math.random() * 500 + 1);
+        this.speedX;
+        this.speedY;
+        this.speedModifier = Math.floor(Math.random() * 6 + 1);
+        this.history = [{x: this.x, y: this.y}];
+        this.maxLegnth = Math.floor(Math.random() * 10 + 5);
+        this.angle = 0;
+        this.newAngle = 0;
+        this.angleCorrector = Math.random() * 0.5 + 0.01;
+        this.timer = this.maxLegnth * 15;
+        this.colors = ['#17d40d', '#2dd624', '#31f527', '#13b50b'];
+        this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
+    }
+    draw(context){
+        context.beginPath();
+        context.moveTo(this.history[0].x, this.history[0].y);
+        for (let i = 0; i < this.history.length; i++){
+            context.lineTo(this.history[i].x, this.history[i].y);
+        }
+        context.strokeStyle = this.color;
+        context.stroke();
+    }
+
+    update(){
+        this.timer--;
+        if (this.timer >= 1){
+            let x = Math.floor(this.x / this.effect.cellSize);
+            let y = Math.floor(this.y / this.effect.cellSize);
+            let index = y * this.effect.cols + x;
+            
+            if (this.effect.flowField[index]){
+                this.newAngle = this.effect.flowField[index].colorAngle;
+                if (this.angle > this.newAngle){
+                    this.angle -= this.angleCorrector;
+                } else if ( this.angle < this.newAngle){
+                    this.angle += this.angleCorrector;
+                } else {
+                    this.angle = this.newAngle;
+                }
+            }
+            this.x += Math.cos(this.angle) * Math.floor(Math.random() * 0.5 + 0.1);
+            this.y -= Math.cos(this.angle) * Math.floor(Math.random() * 3 + 0.5);
+
+            this.history.push({x: this.x, y: this.y});
+            if(this.history.length > this.maxLegnth){
+                this.history.shift();
+            }
+        } else if (this.history.length > 1) {
+            this.history.shift();
+        } else {
+            this.reset();
+        }
+        
+    }
+
+    reset(){
+        this.x = Math.random() * this.effect.width;
+        this.y = Math.floor(Math.random() * this.effect.height + (this.effect.height-5));
+        this.history = [{x: this.x, y: this.y}];
+        this.timer = this.maxLegnth * 5;
+               
+    }
+}
+
+
+
+
+
 
 
 
@@ -222,9 +366,11 @@ class Effect {
         
         // create particles
         this.particles = [];
-        for(let i = 0; i < this.numberOfParticles/2; i++){
+        for(let i = 0; i < this.numberOfParticles/4; i++){
             this.particles.push(new RainParticle(this));
             this.particles.push(new CloudParticle(this));
+            this.particles.push(new SunParticle(this));
+            this.particles.push(new GrassParticle(this));
         }
 
         this.particles.forEach(particle => particle.reset());
