@@ -6,6 +6,8 @@ async function updateTemp(){
 
     const temperature = await invoke("get_tem_command", {});
 
+    
+
     document.getElementById('temperature_display').innerHTML = `Temperature: ${temperature}°C`;
   } catch (error){
     document.getElementById('temperature_display').innerHTML = `Couldn't load`;
