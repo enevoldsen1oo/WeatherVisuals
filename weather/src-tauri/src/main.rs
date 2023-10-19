@@ -59,6 +59,7 @@ fn canvas_particles() -> Vec<bool> {
         "Clear" => {vec.push(true); vec.push(false); vec.push(false); vec.push(true)},
         "Rain" => {vec.push(false); vec.push(true); vec.push(true); vec.push(true)},
         "Wind" => {vec.push(false); vec.push(true); vec.push(false); vec.push(true)},
+        "Cloudy" => {vec.push(false); vec.push(true); vec.push(false); vec.push(true)},
         _ => {vec.push(true); vec.push(false); vec.push(false); vec.push(true)},
     };
 
