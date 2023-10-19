@@ -1,2 +1,2 @@
 # WeatherVisuals
-Live weather visuals stuff
+Live weather visuals stuff of Aalborg
